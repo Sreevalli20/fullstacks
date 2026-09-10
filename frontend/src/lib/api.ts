@@ -1,6 +1,7 @@
 import { College, CollegeListResponse, AuthResponse, User, CollegeFilters } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 
+  (process.env.NODE_ENV === 'production' ? 'https://college-discovery-api-b7yy.onrender.com' : 'http://localhost:3001');
 
 class ApiClient {
   private baseUrl: string;

@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  password      String
+  name          String
+  createdAt     DateTime       @default(now())
+  comparisons   Comparison[]
+  savedColleges SavedCollege[]
+
+  @@index([email])
+}
+
+model College {
+  id            Int            @id @default(autoincrement())
+  name          String
+  city          String
+  state         String
+  fees          Float
+  rating        Float
+  overview      String
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  comparisons   Comparison[]
+  courses       Course[]
+  placement     Placement?
+  reviews       Review[]
+  savedColleges SavedCollege[]
+
+  @@index([name])
+  @@index([city])
+  @@index([state])
+  @@index([rating])
+  @@index([fees])
+}
+
+model Course {
+  id        Int     @id @default(autoincrement())
+  name      String
+  duration  String
+  fees      Float
+  collegeId Int
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@index([collegeId])
+}
+
+model Placement {
+  id               Int     @id @default(autoincrement())
+  collegeId        Int     @unique
+  averagePackage   Float
+  highestPackage   Float
+  placementRate    Float
+  companiesVisited Int
+  college          College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  collegeId Int
+  rating    Float
+  comment   String
+  author    String
+  createdAt DateTime @default(now())
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@index([collegeId])
+}
+
+model SavedCollege {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  collegeId Int
+  createdAt DateTime @default(now())
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, collegeId])
+  @@index([userId])
+  @@index([collegeId])
+}
+
+model Comparison {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  collegeId Int
+  createdAt DateTime @default(now())
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, collegeId])
+  @@index([userId])
+  @@index([collegeId])
+}

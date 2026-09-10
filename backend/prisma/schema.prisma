@@ -28,6 +28,7 @@ model College {
   rating        Float
   overview      String
   imageUrl      String?
+  category      String?
   createdAt     DateTime       @default(now())
   comparisons   Comparison[]
   courses       Course[]
@@ -40,6 +41,7 @@ model College {
   @@index([state])
   @@index([rating])
   @@index([fees])
+  @@index([category])
 }
 
 model Course {

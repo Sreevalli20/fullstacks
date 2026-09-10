@@ -34,6 +34,34 @@ const collegeSuffixes = [
   'College of Architecture', 'School of Design', 'Institute of Pharmacy', 'College of Agriculture'
 ];
 
+const categories = [
+  'Engineering', 'Medical', 'Management', 'Arts & Science', 
+  'Law', 'Architecture', 'Pharmacy', 'Design'
+];
+
+const campusImages = [
+  'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80',
+  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80',
+  'https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=800&q=80',
+  'https://images.unsplash.com/photo-1591384640699-9a4bd8c0c72e?w=800&q=80',
+  'https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=800&q=80',
+  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80',
+  'https://images.unsplash.com/photo-1581362718680-3a2c1e27a57a?w=800&q=80',
+  'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80',
+  'https://images.unsplash.com/photo-1555861496-0666c8981751?w=800&q=80',
+  'https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?w=800&q=80',
+  'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=80',
+  'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=800&q=80',
+  'https://images.unsplash.com/photo-1594312915251-48db9280c8f1?w=800&q=80',
+  'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&q=80',
+  'https://images.unsplash.com/photo-1568219656418-13c4a780b9d5?w=800&q=80',
+  'https://images.unsplash.com/photo-1605218427306-635ba7c4a6d5?w=800&q=80',
+  'https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=800&q=80',
+  'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=800&q=80',
+  'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&q=80',
+  'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&q=80',
+];
+
 const courseNames = [
   'Computer Science Engineering', 'Mechanical Engineering', 'Electrical Engineering',
   'Civil Engineering', 'Electronics Engineering', 'Chemical Engineering', 'Information Technology',
@@ -124,6 +152,8 @@ async function main() {
     const state = getRandomItem(states);
     const fees = getRandomFloat(50000, 500000, 0);
     const rating = getRandomFloat(3.0, 5.0, 1);
+    const category = getRandomItem(categories);
+    const imageUrl = getRandomItem(campusImages);
 
     const college = await prisma.college.create({
       data: {
@@ -133,7 +163,8 @@ async function main() {
         fees,
         rating,
         overview: `${prefix} in ${city} is a premier educational institution offering world-class education in various disciplines. With state-of-the-art facilities, experienced faculty, and strong industry connections, the college has established itself as a leader in higher education.`,
-        imageUrl: `https://via.placeholder.com/400x300/1e3a8a/ffffff?text=College+${i}`,
+        imageUrl,
+        category,
       },
     });
     colleges.push(college);

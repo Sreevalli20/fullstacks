@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { College, CollegeFilters } from '@/types';
 import CollegeCard from '@/components/college/CollegeCard';
@@ -8,6 +9,7 @@ import SearchFilters from '@/components/search/SearchFilters';
 import { Loader2 } from 'lucide-react';
 
 export default function CollegesPage() {
+  const searchParams = useSearchParams();
   const [colleges, setColleges] = useState<College[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,9 +40,19 @@ export default function CollegesPage() {
   };
 
   useEffect(() => {
-    fetchColleges(filters);
+    const categoryParam = searchParams.get('category');
+    const initialFilters: CollegeFilters = {
+      page: 1,
+      limit: 12,
+    };
+    
+    if (categoryParam) {
+      initialFilters.category = categoryParam;
+    }
+    
+    fetchColleges(initialFilters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
   const handleFilterChange = (newFilters: CollegeFilters) => {
     fetchColleges({ ...newFilters, page: 1 });
@@ -51,13 +63,25 @@ export default function CollegesPage() {
   };
 
   const handleClearFilters = () => {
-    fetchColleges({ page: 1, limit: 12 });
+    const categoryParam = searchParams.get('category');
+    const clearedFilters: CollegeFilters = {
+      page: 1,
+      limit: 12,
+    };
+    
+    if (categoryParam) {
+      clearedFilters.category = categoryParam;
+    }
+    
+    fetchColleges(clearedFilters);
   };
+
+  const categoryLabel = filters.category ? `${filters.category} Colleges` : 'Explore Colleges';
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Explore Colleges</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{categoryLabel}</h1>
         <p className="text-gray-600">Find and compare colleges across India</p>
       </div>
 

@@ -10,10 +10,14 @@ interface CollegeCardProps {
   college: College;
 }
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80';
+
 export default function CollegeCard({ college }: CollegeCardProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [isComparing, setIsComparing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -59,18 +63,27 @@ export default function CollegeCard({ college }: CollegeCardProps) {
     }
   };
 
+  const imageUrl = imageError ? FALLBACK_IMAGE : (college.imageUrl || FALLBACK_IMAGE);
+
   return (
     <Link href={`/colleges/${college.id}`}>
       <div className="card hover:shadow-lg transition-all h-full flex flex-col">
-        {college.imageUrl && (
-          <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 rounded-t-xl overflow-hidden">
-            <img
-              src={college.imageUrl}
-              alt={college.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
+        <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 rounded-t-xl overflow-hidden relative">
+          {!imageLoaded && (
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-primary-200 animate-pulse" />
+          )}
+          <img
+            src={imageUrl}
+            alt={college.name}
+            className="w-full h-full object-cover"
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              setImageError(true);
+              setImageLoaded(true);
+            }}
+            loading="lazy"
+          />
+        </div>
         
         <div className="flex-1 p-6">
           <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">

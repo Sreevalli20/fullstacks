@@ -6,6 +6,8 @@ import { api } from '@/lib/api';
 import { College } from '@/types';
 import { MapPin, IndianRupee, Star, BookOpen, TrendingUp, Building2, Users, Heart, Scale, ArrowLeft, Loader2 } from 'lucide-react';
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80';
+
 export default function CollegeDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -15,6 +17,8 @@ export default function CollegeDetailPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [isComparing, setIsComparing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -95,6 +99,8 @@ export default function CollegeDetailPage() {
     );
   }
 
+  const imageUrl = imageError ? FALLBACK_IMAGE : (college.imageUrl || FALLBACK_IMAGE);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <button
@@ -108,15 +114,21 @@ export default function CollegeDetailPage() {
       {/* Header */}
       <div className="card mb-8">
         <div className="flex flex-col md:flex-row gap-6">
-          {college.imageUrl && (
-            <div className="w-full md:w-80 h-48 bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg overflow-hidden flex-shrink-0">
-              <img
-                src={college.imageUrl}
-                alt={college.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+          <div className="w-full md:w-80 h-48 bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg overflow-hidden flex-shrink-0 relative">
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-primary-200 animate-pulse" />
+            )}
+            <img
+              src={imageUrl}
+              alt={college.name}
+              className="w-full h-full object-cover"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => {
+                setImageError(true);
+                setImageLoaded(true);
+              }}
+            />
+          </div>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">{college.name}</h1>
             <div className="flex flex-wrap items-center gap-4 mb-4">

@@ -66,6 +66,7 @@ class ApiClient {
     if (filters.minFees) params.append('minFees', filters.minFees.toString());
     if (filters.maxFees) params.append('maxFees', filters.maxFees.toString());
     if (filters.minRating) params.append('minRating', filters.minRating.toString());
+    if (filters.category) params.append('category', filters.category);
     if (filters.sortBy) params.append('sortBy', filters.sortBy);
     params.append('page', (filters.page || 1).toString());
     params.append('limit', (filters.limit || 12).toString());

@@ -38,3 +38,5 @@ prisma/migrations/
 
 # Turbo
 .turbo/
+
+.vercel

@@ -17,6 +17,7 @@ export const getColleges = async (
       minFees,
       maxFees,
       minRating,
+      category,
       sortBy = 'name',
       page = '1',
       limit = '12',
@@ -59,6 +60,13 @@ export const getColleges = async (
     if (minRating) {
       where.rating = {
         gte: parseFloat(minRating as string),
+      };
+    }
+
+    if (category) {
+      where.category = {
+        equals: category as string,
+        mode: 'insensitive',
       };
     }
 

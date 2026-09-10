@@ -7,6 +7,7 @@ export interface College {
   rating: number;
   overview: string;
   imageUrl?: string;
+  category?: string;
   placement?: Placement;
   courses?: Course[];
   reviews?: Review[];
@@ -71,6 +72,7 @@ export interface CollegeFilters {
   minFees?: number;
   maxFees?: number;
   minRating?: number;
+  category?: string;
   sortBy?: string;
   page?: number;
   limit?: number;
